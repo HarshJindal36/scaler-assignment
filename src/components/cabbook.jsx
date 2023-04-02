@@ -28,6 +28,7 @@ export default function CabBook({ id, defaultRate, pathPerCab, setPathPerCab, ti
     const [email, setEmail] = useState("");
     const [calculatedRoute, setCalculatedRoute] = useState();
     const [bookText, setBookText] = useState("Book Cab");
+    const [isBooked, setIsBooked] = useState(false);
 
     function openModal(CMD) {
         setModalWindow(CMD);
@@ -74,6 +75,7 @@ export default function CabBook({ id, defaultRate, pathPerCab, setPathPerCab, ti
 
     function confirm() {
         alert("Booking has been confirmed");
+        setIsBooked(true);
         // transporter.sendMail({
         //     from: '"Andrew Schultz" <andrew60@ethereal.email>', // sender address
         //     to: email, // list of receivers
@@ -121,7 +123,7 @@ export default function CabBook({ id, defaultRate, pathPerCab, setPathPerCab, ti
         </Modal>
 
         <div className="w-[90vw] flex flex-col sm:flex-row justify-between gap-5 bg-blue-50 rounded-md px-5 py-2 mt-3">
-            <div className="flex gap-5 flex-col sm:flex-row">
+            {!isBooked && <div className="flex gap-5 flex-col sm:flex-row">
                 <div className="flex gap-5">
                     <NativeSelect className="w-full"
                         label="From" placeholder="Select source" data={[{
@@ -137,15 +139,18 @@ export default function CabBook({ id, defaultRate, pathPerCab, setPathPerCab, ti
                 <Input.Wrapper label="Email Address" className="sm:w-[200px]">
                     <Input placeholder="melon.musk@gmail.com" type="email" onChange={(e) => setEmail(e.target.value)} defaultValue="" />
                 </Input.Wrapper>
-            </div>
-            <div className="flex my-6 gap-3 mx-auto sm:mx-0">
+            </div>}
+            {!isBooked && <div className="flex my-6 gap-3 mx-auto sm:mx-0">
                 <Button.Group>
                     <Button variant="outline" color="red" onClick={() => openModal("EDIT")}><IconEdit color="red" /></Button>
                     <Button variant="outline" color="green" onClick={() => {
                         if (checkValidity()) openModal("BOOK")
                     }} disabled={!enableBook}>{bookText}</Button>
                 </Button.Group>
-            </div>
+            </div>}
         </div>
+        {isBooked && <div className="flex flex-col gap-5"><b>Cab has been Booked</b>Time taken : {calculatedRoute[0]} minutes<br />
+            Estimated Cost : {parseInt(calculatedRoute[0]) * rate} Rs<br />
+            Path taken : {calculatedRoute[1].join(" -> ")}<br /></div>}
     </div>
 }
