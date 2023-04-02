@@ -16,8 +16,6 @@ function App() {
     console.log(timePath);
   }, [timePath])
 
-
-
   return <div className="mb-10">
     <div className='mx-auto w-fit'>
       <img src={diagram} className='p-3' />

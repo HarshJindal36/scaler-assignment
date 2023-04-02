@@ -43,12 +43,13 @@ export default function CabBook({ id, defaultRate, pathPerCab, setPathPerCab, ti
         setToVals(fromVals.filter((val) => val !== e.target.value));
         console.log(e.target.value);
         setSelectedFrom(e.target.value);
+        checkValidity();
     }
 
     function onDestinationChange(e) {
         console.log(e.target.value);
         setSelectedTo(e.target.value);
-        setEnableBook(true);
+        checkValidity();
     }
 
     useEffect(() => {
@@ -71,22 +72,35 @@ export default function CabBook({ id, defaultRate, pathPerCab, setPathPerCab, ti
         }
     }
 
-    // function confirm() {
-    //     transporter.sendMail({
-    //         from: '"Andrew Schultz" <andrew60@ethereal.email>', // sender address
-    //         to: email, // list of receivers
-    //         subject: "Cab Booked", // Subject line
-    //         // text: "Your cab has been successfully booked", // plain text body
-    //         html: `Your cab has been successfully booked<br/>Path : ${calculatedRoute[1].join(" -> ")}<br/> Estimated Price : ${parseInt(calculatedRoute[0]) * rate}`, // html body
-    //     }).then((info) => {
-    //         console.log(info);
-    //     }).catch((err) => {
-    //         console.log(err);
-    //     });
-    // }
+    function confirm() {
+        alert("Booking has been confirmed");
+        // transporter.sendMail({
+        //     from: '"Andrew Schultz" <andrew60@ethereal.email>', // sender address
+        //     to: email, // list of receivers
+        //     subject: "Cab Booked", // Subject line
+        //     // text: "Your cab has been successfully booked", // plain text body
+        //     html: `Your cab has been successfully booked<br/>Path : ${calculatedRoute[1].join(" -> ")}<br/> Estimated Price : ${parseInt(calculatedRoute[0]) * rate}`, // html body
+        // }).then((info) => {
+        //     console.log(info);
+        // }).catch((err) => {
+        //     console.log(err);
+        // });
+    }
+
+    function checkValidity() {
+        if (email.length === 0) {
+            setEnableBook(false);
+            return;
+        }
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const valid = re.test(String(email).toLowerCase());
+        setEnableBook(valid);
+        return valid;
+    }
 
     useEffect(() => {
-
+        if (selectedFrom === "x" || selectedTo === "x") return
+        checkValidity()
     }, [email]);
 
     return <div>
@@ -121,13 +135,15 @@ export default function CabBook({ id, defaultRate, pathPerCab, setPathPerCab, ti
                         }, ...toVals]} defaultValue="x" disabled={!showDestination} onChange={onDestinationChange} />
                 </div>
                 <Input.Wrapper label="Email Address" className="sm:w-[200px]">
-                    <Input placeholder="melon.musk@gmail.com" type="email" onChange={setEmail} />
+                    <Input placeholder="melon.musk@gmail.com" type="email" onChange={(e) => setEmail(e.target.value)} defaultValue="" />
                 </Input.Wrapper>
             </div>
             <div className="flex my-6 gap-3 mx-auto sm:mx-0">
                 <Button.Group>
                     <Button variant="outline" color="red" onClick={() => openModal("EDIT")}><IconEdit color="red" /></Button>
-                    <Button variant="outline" color="green" onClick={() => openModal("BOOK")} disabled={!enableBook}>{bookText}</Button>
+                    <Button variant="outline" color="green" onClick={() => {
+                        if (checkValidity()) openModal("BOOK")
+                    }} disabled={!enableBook}>{bookText}</Button>
                 </Button.Group>
             </div>
         </div>
