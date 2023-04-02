@@ -148,9 +148,9 @@ export default function CabBook({ id, defaultRate, pathPerCab, setPathPerCab, ti
                     }} disabled={!enableBook}>{bookText}</Button>
                 </Button.Group>
             </div>}
+            {isBooked && <div className="flex flex-col gap-5"><b>Cab has been Booked</b>Time taken : {calculatedRoute[0]} minutes<br />
+                Estimated Cost : {parseInt(calculatedRoute[0]) * rate} Rs<br />
+                Path taken : {calculatedRoute[1].join(" -> ")}<br /></div>}
         </div>
-        {isBooked && <div className="flex flex-col gap-5"><b>Cab has been Booked</b>Time taken : {calculatedRoute[0]} minutes<br />
-            Estimated Cost : {parseInt(calculatedRoute[0]) * rate} Rs<br />
-            Path taken : {calculatedRoute[1].join(" -> ")}<br /></div>}
     </div>
 }
